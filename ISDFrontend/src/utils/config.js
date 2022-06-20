@@ -1,0 +1,1 @@
+export const BASE_API_URL = 'https://imes-api.isdcorp.vn/api/v1';

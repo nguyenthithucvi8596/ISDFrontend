@@ -1,66 +1,62 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
-import { Drawer, IconButton, List } from '@mui/material';
-import { useTheme } from '@mui/material';
-import { withRouter } from 'react-router-dom';
-import classNames from 'classnames';
+import React, { useState, useEffect, useMemo } from "react";
+import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
+import { Drawer, IconButton, List } from "@mui/material";
+import { useTheme } from "@mui/material";
+import { withRouter } from "react-router-dom";
+import classNames from "classnames";
 // import { withRouter } from 'react-router-dom';
 // styles
-import useStyles from './styles';
+import useStyles from "./styles";
 
 // components
-import SidebarLink from './components/SidebarLink/SidebarLink';
+import SidebarLink from "./components/SidebarLink/SidebarLink";
 
 // context
 import {
   useLayoutState,
   useLayoutDispatch,
   toggleSidebar,
-} from '../context/LayoutContext';
+} from "../context/LayoutContext";
 
 function Sidebar({ location, structure }) {
-
   let classes = useStyles();
-  
+
   let theme = useTheme();
- 
+
   const toggleDrawer = (value) => (event) => {
-    console.log(value,event)
+    console.log(value, event);
     if (
-      event.type === 'keydown' &&
-      (event.key === 'Tab' || event.key === 'Shift')
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
     ) {
       return;
     }
 
     if (value && !isPermanent) toggleSidebar(layoutDispatch);
-
   };
 
   // global
-  let {isSidebarOpened} = useLayoutState().state;
+  let { isSidebarOpened } = useLayoutState().state;
   let layoutDispatch = useLayoutDispatch();
-    console.log( isSidebarOpened, useLayoutState())
   // local
   let [isPermanent, setPermanent] = useState(true);
 
-
   const isSidebarOpenedWrapper = useMemo(
     () => (!isPermanent ? !isSidebarOpened : isSidebarOpened),
-    [isPermanent, isSidebarOpened],
+    [isPermanent, isSidebarOpened]
   );
- 
+
   useEffect(function () {
-    window.addEventListener('resize', handleWindowWidthChange);
+    window.addEventListener("resize", handleWindowWidthChange);
     handleWindowWidthChange();
     return function cleanup() {
-      window.removeEventListener('resize', handleWindowWidthChange);
+      window.removeEventListener("resize", handleWindowWidthChange);
     };
   });
 
   return (
     <Drawer
-      variant={isPermanent ? 'permanent' : 'temporary'}
+      variant={isPermanent ? "permanent" : "temporary"}
       className={classNames(classes.drawer, {
         [classes.drawerOpen]: isSidebarOpenedWrapper,
         [classes.drawerClose]: !isSidebarOpenedWrapper,
@@ -88,7 +84,7 @@ function Sidebar({ location, structure }) {
         className={classes.sidebarList}
         classes={{ padding: classes.padding }}
       >
-        {structure.map(link => (
+        {structure.map((link) => (
           <SidebarLink
             key={link.id}
             location={location}
@@ -103,7 +99,6 @@ function Sidebar({ location, structure }) {
 
   // ##################################################################
   function handleWindowWidthChange() {
-    
     let windowWidth = window.innerWidth;
     let breakpointWidth = theme.breakpoints.values.md;
     let isSmallScreen = windowWidth < breakpointWidth;
